@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:if="${task.id != null}">Редактировать задачу</title>
+    <title th:unless="${task.id != null}">Новая задача</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header" th:classappend="${task.id != null} ? 'bg-warning text-dark' : 'bg-primary text-white'">
+                    <h2 class="h4 mb-0">
+                        <i th:if="${task.id == null}" class="bi bi-plus-circle me-2"></i>
+                        <i th:unless="${task.id == null}" class="bi bi-pencil me-2"></i>
+                        <span th:if="${task.id != null}">Редактировать задачу</span>
+                        <span th:unless="${task.id != null}">Новая задача</span>
+                    </h2>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/tasks/save}" th:object="${task}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">Название задачи:</label>
+                            <input type="text" class="form-control form-control-lg" id="name"
+                                   th:field="*{name}" required
+                                   placeholder="Введите название задачи">
+                            <div class="form-text">Обязательное поле</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Описание задачи:</label>
+                            <textarea class="form-control" id="description"
+                                      th:field="*{description}" rows="4"
+                                      placeholder="Опишите детали задачи..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="deadlineDate" class="form-label fw-bold">Дата выполнения:</label>
+                            <input type="date" class="form-control" id="deadlineDate"
+                                   th:field="*{deadlineDate}" required>
+                            <div class="form-text">Выберите дату выполнения задачи</div>
+                        </div>
+
+                        <div class="mb-4 form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="completed"
+                                   th:field="*{completed}" role="switch">
+                            <label class="form-check-label fw-bold" for="completed">
+                                Задача выполнена
+                            </label>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success flex-fill">
+                                <i class="bi bi-check-lg me-1"></i>
+                                <span th:if="${task.id != null}">Обновить</span>
+                                <span th:unless="${task.id != null}">Создать</span>
+                            </button>
+                            <a th:href="@{/tasks}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

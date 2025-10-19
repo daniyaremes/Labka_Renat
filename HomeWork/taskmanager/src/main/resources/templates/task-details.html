@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Детали задачи</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header" th:classappend="${task.completed} ? 'bg-success text-white' : 'bg-info text-white'">
+                    <h2 class="h4 mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Детали задачи
+                    </h2>
+                </div>
+
+                <div class="card-body">
+                    <div th:object="${task}">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">ID задачи:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-secondary fs-6" th:text="*{id}">ID</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Название:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <p class="fs-5 mb-0 fw-bold text-primary" th:text="*{name}">Название</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Статус:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                    <span th:if="*{completed}" class="badge bg-success fs-6">
+                                        <i class="bi bi-check-lg me-1"></i>Выполнено
+                                    </span>
+                                <span th:unless="*{completed}" class="badge bg-warning text-dark fs-6">
+                                        <i class="bi bi-clock me-1"></i>В процессе
+                                    </span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Дата выполнения:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <p class="mb-0 fs-6">
+                                    <i class="bi bi-calendar me-2 text-muted"></i>
+                                    <span th:text="*{deadlineDate}">дата</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <strong class="text-muted">Описание:</strong>
+                                <div class="border p-3 rounded bg-light mt-2">
+                                    <p class="mb-0" th:text="*{(description != null and description != '') ? description : 'Описание отсутствует'}">
+                                        Описание задачи...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                           class="btn btn-primary flex-fill">
+                            <i class="bi bi-pencil me-1"></i>Редактировать
+                        </a>
+                        <a th:href="@{/tasks/delete/{id}(id=${task.id})}"
+                           class="btn btn-danger"
+                           onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')">
+                            <i class="bi bi-trash me-1"></i>Удалить
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <a th:href="@{/tasks}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Назад к списку
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Все задачи</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Заголовок и кнопка -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+            <i class="bi bi-list-check me-2"></i>
+            Все задачи
+        </h1>
+        <a th:href="@{/tasks/new}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Новая задача
+        </a>
+    </div>
+
+    <!-- Информация о количестве задач -->
+    <div class="alert alert-info mb-3">
+        <i class="bi bi-info-circle me-2"></i>
+        Количество задач:
+        <strong th:text="${tasks.size()}">0</strong>
+    </div>
+
+    <!-- Сообщение если нет задач -->
+    <div th:if="${tasks.empty}" class="alert alert-warning text-center">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Нет созданных задач.
+        <a th:href="@{/tasks/new}" class="alert-link ms-2">
+            Создайте первую задачу!
+        </a>
+    </div>
+
+    <!-- Список задач -->
+    <div th:unless="${tasks.empty}" class="row">
+        <div th:each="task : ${tasks}" class="col-md-6 col-lg-4 mb-4">
+
+            <!-- Определяем классы карточки в зависимости от статуса -->
+            <div th:classappend="${task.completed} ?
+                    'card h-100 shadow-sm border-success completed-task' :
+                    'card h-100 shadow-sm border-primary'">
+
+                <div class="card-body d-flex flex-column">
+                    <!-- Заголовок и статус -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title" th:text="${task.name}">
+                            Название задачи
+                        </h5>
+
+                        <!-- Бейдж статуса -->
+                        <span th:if="${task.completed}"
+                              class="badge bg-success ms-2">
+                                <i class="bi bi-check-lg me-1"></i>
+                                Выполнено
+                            </span>
+                        <span th:unless="${task.completed}"
+                              class="badge bg-warning text-dark ms-2">
+                                <i class="bi bi-clock me-1"></i>
+                                В процессе
+                            </span>
+                    </div>
+
+                    <!-- Описание -->
+                    <p class="card-text text-muted small flex-grow-1">
+                            <span th:if="${task.description != null and task.description != ''}"
+                                  th:text="${#strings.abbreviate(task.description, 100)}">
+                                Описание задачи
+                            </span>
+                        <span th:if="${task.description == null or task.description == ''}"
+                              class="fst-italic text-muted">
+                                Описание отсутствует
+                            </span>
+                    </p>
+
+                    <!-- Дата выполнения -->
+                    <div class="mt-auto">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>
+                            Срок:
+                            <span th:text="${task.deadlineDate}">
+                                    2024-12-31
+                                </span>
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="card-footer bg-transparent">
+                    <div class="btn-group w-100" role="group">
+                        <!-- Кнопка просмотра -->
+                        <a th:href="@{/tasks/details/{id}(id=${task.id})}"
+                           class="btn btn-outline-info btn-sm"
+                           title="Просмотр деталей">
+                            <i class="bi bi-eye"></i>
+                        </a>
+
+                        <!-- Кнопка редактирования -->
+                        <a th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                           class="btn btn-outline-primary btn-sm"
+                           title="Редактировать">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <!-- Кнопка удаления -->
+                        <a th:href="@{/tasks/delete/{id}(id=${task.id})}"
+                           class="btn btn-outline-danger btn-sm"
+                           title="Удалить"
+                           onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
